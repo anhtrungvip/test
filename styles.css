@@ -1,0 +1,557 @@
+:root {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: rgba(30, 41, 59, 0.75);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent-pink: #ec4899;
+  --accent-yellow: #f59e0b;
+  --accent-cyan: #06b6d4;
+  --accent-purple: #8b5cf6;
+  --accent-green: #10b981;
+  --accent-red: #ef4444;
+  --border-glass: rgba(255, 255, 255, 0.12);
+  --font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  padding-bottom: 60px;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.25) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.2) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(6, 182, 212, 0.15) 0px, transparent 50%);
+  background-attachment: fixed;
+  transition: filter 0.3s;
+}
+
+/* Canvas hiệu ứng chuột và pháo hoa */
+#fx-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Header & Controls */
+.header {
+  text-align: center;
+  padding: 40px 20px 20px;
+}
+
+.title {
+  font-size: 2.8rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #f43f5e, #fbbf24, #38bdf8, #a855f7);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: rainbow-text 6s ease infinite;
+  letter-spacing: -0.5px;
+  text-shadow: 0 0 30px rgba(244, 63, 94, 0.3);
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  margin-top: 10px;
+}
+
+.top-bar-controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.pill-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  color: var(--text-main);
+  padding: 10px 20px;
+  border-radius: 9999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.pill-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-pink);
+  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.3);
+}
+
+.pill-btn:active {
+  transform: translateY(0);
+}
+
+.pill-btn.active {
+  background: linear-gradient(135deg, #ec4899, #8b5cf6);
+  border-color: transparent;
+  color: #fff;
+  animation: pulse-glow 1.5s infinite;
+}
+
+/* Grid Layout */
+.container {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 25px;
+}
+
+/* Card Styling */
+.toy-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: 20px;
+  padding: 24px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.toy-card:hover {
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-4px);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border-glass);
+  padding-bottom: 12px;
+}
+
+.card-icon {
+  font-size: 1.8rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.card-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Card 1: Nút chạy trốn */
+.runaway-zone {
+  position: relative;
+  min-height: 220px;
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 14px;
+  border: 2px dashed rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#runaway-btn {
+  position: absolute;
+  background: linear-gradient(135deg, #ef4444, #f97316);
+  color: white;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: 800;
+  padding: 14px 28px;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+  transition: left 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              top 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              transform 0.1s;
+  white-space: nowrap;
+}
+
+.taunt-text {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--accent-yellow);
+  font-style: italic;
+  margin-top: 12px;
+  min-height: 22px;
+}
+
+/* Card 2: Clicker Game */
+.clicker-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.click-counter {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--accent-yellow);
+  text-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+}
+
+.click-target {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #3b82f6, #1d4ed8);
+  border: none;
+  cursor: pointer;
+  font-size: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.5), inset 0 -4px 6px rgba(0,0,0,0.3);
+  transition: transform 0.08s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.click-target:active {
+  transform: scale(0.88);
+}
+
+.badge-text {
+  display: inline-block;
+  background: rgba(139, 92, 246, 0.25);
+  border: 1px solid var(--accent-purple);
+  color: #c084fc;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.clicker-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.action-btn {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-glass);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.action-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* Card 3: DJ Soundboard */
+.sound-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.sound-pad {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  padding: 16px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.12s ease;
+}
+
+.sound-pad span:first-child {
+  font-size: 1.8rem;
+}
+
+.sound-pad:hover {
+  background: rgba(236, 72, 153, 0.2);
+  border-color: var(--accent-pink);
+  transform: translateY(-2px);
+}
+
+.sound-pad:active, .sound-pad.playing {
+  background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+  transform: scale(0.95);
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.6);
+}
+
+/* Card 4: Quả Cầu Bói Dạo */
+.oracle-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.oracle-input-group {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+}
+
+.oracle-input {
+  flex: 1;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-glass);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: white;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.oracle-input:focus {
+  border-color: var(--accent-cyan);
+}
+
+.oracle-ask-btn {
+  background: var(--accent-cyan);
+  border: none;
+  color: #042f2e;
+  font-weight: 700;
+  padding: 0 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.oracle-ask-btn:hover {
+  opacity: 0.9;
+}
+
+.magic-ball {
+  width: 110px;
+  height: 110px;
+  background: radial-gradient(circle at 35% 35%, #475569, #0f172a 75%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(0, 0, 0, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.magic-ball:hover {
+  transform: scale(1.04);
+}
+
+.magic-ball.shake {
+  animation: shake-ball 0.5s ease;
+}
+
+.ball-inner {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #1e1b4b;
+  border: 2px solid #818cf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c7d2fe;
+  font-weight: 900;
+  font-size: 1.4rem;
+}
+
+.oracle-answer {
+  min-height: 44px;
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px dashed var(--accent-cyan);
+  border-radius: 10px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #a5f3fc;
+}
+
+/* Card 5: Pop-It Bong Bóng */
+.pop-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  padding: 10px 0;
+}
+
+.bubble {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #f472b6, #db2777);
+  box-shadow: inset 0 -3px 5px rgba(0,0,0,0.3), 0 4px 8px rgba(219, 39, 119, 0.35);
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.bubble:nth-child(2n) {
+  background: radial-gradient(circle at 30% 30%, #38bdf8, #0284c7);
+  box-shadow: inset 0 -3px 5px rgba(0,0,0,0.3), 0 4px 8px rgba(2, 132, 199, 0.35);
+}
+
+.bubble:nth-child(3n) {
+  background: radial-gradient(circle at 30% 30%, #34d399, #059669);
+  box-shadow: inset 0 -3px 5px rgba(0,0,0,0.3), 0 4px 8px rgba(5, 150, 105, 0.35);
+}
+
+.bubble:nth-child(4n) {
+  background: radial-gradient(circle at 30% 30%, #fbbf24, #d97706);
+  box-shadow: inset 0 -3px 5px rgba(0,0,0,0.3), 0 4px 8px rgba(217, 119, 6, 0.35);
+}
+
+.bubble:hover {
+  transform: scale(1.1);
+}
+
+.bubble.popped {
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
+  transform: scale(0.85);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Card 6: Hộp Bí Mật / Meme Generator */
+.meme-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  gap: 15px;
+  text-align: center;
+}
+
+.meme-display {
+  font-size: 3.8rem;
+  line-height: 1;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
+  animation: float 2.5s ease-in-out infinite;
+}
+
+.meme-quote {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fde047;
+  padding: 0 10px;
+}
+
+/* Party Mode Animation */
+body.party-mode {
+  animation: disco-bg 0.6s infinite alternate;
+}
+
+body.party-mode .toy-card {
+  animation: party-wiggle 0.3s infinite alternate;
+}
+
+/* Keyframes */
+@keyframes rainbow-text {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 15px rgba(236, 72, 153, 0.6); }
+  50% { box-shadow: 0 0 25px rgba(139, 92, 246, 0.9); }
+}
+
+@keyframes shake-ball {
+  0%, 100% { transform: translateX(0) rotate(0); }
+  20% { transform: translateX(-15px) rotate(-10deg); }
+  40% { transform: translateX(15px) rotate(10deg); }
+  60% { transform: translateX(-10px) rotate(-5deg); }
+  80% { transform: translateX(10px) rotate(5deg); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes disco-bg {
+  0% { filter: hue-rotate(0deg) saturate(1.8); }
+  100% { filter: hue-rotate(360deg) saturate(2.2); }
+}
+
+@keyframes party-wiggle {
+  0% { transform: rotate(-1.5deg) scale(1.01); }
+  100% { transform: rotate(1.5deg) scale(0.99); }
+}
+
+/* Floating number when clicking */
+.float-num {
+  position: fixed;
+  font-weight: 900;
+  font-size: 1.5rem;
+  color: #facc15;
+  pointer-events: none;
+  animation: float-up 0.8s ease-out forwards;
+  z-index: 10000;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+@keyframes float-up {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-50px) scale(1.4); }
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 40px;
+}
+
+footer a {
+  color: var(--accent-pink);
+  text-decoration: none;
+}

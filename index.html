@@ -1,13 +1,175 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
   <head>
-    <title>Hello, World!</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🎪 Trung Tâm Giải Trí Vô Tri 3000™</title>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤡</text></svg>">
   </head>
   <body>
-      <h1 class="title">Hello World!</h1>
-      <p id="currentTime"></p>
-      <script src="script.js"></script>
-      <h2>Current Time</h2>
+    <!-- Canvas vẽ hiệu ứng hạt chuột và pháo hoa -->
+    <canvas id="fx-canvas"></canvas>
+
+    <!-- Header -->
+    <header class="header">
+      <h1 class="title">🎪 TRUNG TÂM GIẢI TRÍ VÔ TRI 3000™</h1>
+      <p class="subtitle">Nơi xả stress, nghịch ngợm vô bổ nhưng siêu dính! Nhấp chuột đi đâu cũng có bất ngờ ✨</p>
+      
+      <div class="top-bar-controls">
+        <button class="pill-btn" id="btn-party">
+          <span>🎉</span> Chế Độ Quẩy (Party Mode)
+        </button>
+        <button class="pill-btn" id="btn-sound">
+          <span id="sound-icon">🔊</span> Âm Thanh: <strong id="sound-status">BẬT</strong>
+        </button>
+        <button class="pill-btn" id="btn-fireworks">
+          <span>🎆</span> Bắn Pháo Hoa Ngay!
+        </button>
+        <button class="pill-btn" id="btn-gravity">
+          <span>🌀</span> Rung Lắc Màn Hình
+        </button>
+      </div>
+    </header>
+
+    <!-- Grid chứa các trò nghịch ngợm -->
+    <main class="container">
+      
+      <!-- Thẻ 1: Nút Né Chuột (Troll Runaway Button) -->
+      <section class="toy-card">
+        <div class="card-header">
+          <span class="card-icon">🏃‍♂️</span>
+          <div>
+            <div class="card-title">Đố Bắt Được Tui!</div>
+            <div class="card-desc">Thử di chuột chạm vào nút xem nào</div>
+          </div>
+        </div>
+        <div class="runaway-zone" id="runaway-container">
+          <button id="runaway-btn">CẤM BẤM! 🚫</button>
+        </div>
+        <div class="taunt-text" id="runaway-taunt">Đưa chuột lại gần thử xem 😉</div>
+      </section>
+
+      <!-- Thẻ 2: Máy Bấm Chuột Vô Tri (Spam Clicker) -->
+      <section class="toy-card">
+        <div class="card-header">
+          <span class="card-icon">🦆</span>
+          <div>
+            <div class="card-title">Máy Bấm Chuột Xả Giận</div>
+            <div class="card-desc">Bấm càng nhanh, danh hiệu càng bựa</div>
+          </div>
+        </div>
+        <div class="clicker-box">
+          <div class="click-counter" id="click-count">0</div>
+          <button class="click-target" id="duck-btn" title="Click liên tục đi nào!">🦆</button>
+          <div class="badge-text" id="player-rank">Danh hiệu: Tập Sự Vô Tri 🌱</div>
+          <div class="clicker-actions">
+            <button class="action-btn" id="btn-autoclick">⚡ Bật Auto-Click (5s)</button>
+            <button class="action-btn" id="btn-reset-clicks">🔄 Reset điểm</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Thẻ 3: Bảng DJ Vô Tri (Soundboard) -->
+      <section class="toy-card">
+        <div class="card-header">
+          <span class="card-icon">🎧</span>
+          <div>
+            <div class="card-title">Bàn Phím DJ 8-Bit</div>
+            <div class="card-desc">Tạo nhạc bằng Web Audio API siêu mượt</div>
+          </div>
+        </div>
+        <div class="sound-grid">
+          <button class="sound-pad" data-sound="duck">
+            <span>🦆</span>
+            <span>Cịt Cịt</span>
+          </button>
+          <button class="sound-pad" data-sound="laser">
+            <span>🔫</span>
+            <span>Pew Pew</span>
+          </button>
+          <button class="sound-pad" data-sound="coin">
+            <span>💰</span>
+            <span>Ting Ting</span>
+          </button>
+          <button class="sound-pad" data-sound="boing">
+            <span>🎈</span>
+            <span>Boinggg</span>
+          </button>
+          <button class="sound-pad" data-sound="boom">
+            <span>💣</span>
+            <span>BÙM!</span>
+          </button>
+          <button class="sound-pad" data-sound="magic">
+            <span>🪄</span>
+            <span>Phép Thuật</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Thẻ 4: Quả Cầu Tiên Tri Vũ Trụ -->
+      <section class="toy-card">
+        <div class="card-header">
+          <span class="card-icon">🔮</span>
+          <div>
+            <div class="card-title">Quả Cầu Bói Dạo 8-Ball</div>
+            <div class="card-desc">Nhập điều bạn phân vân rồi xin quẻ</div>
+          </div>
+        </div>
+        <div class="oracle-box">
+          <div class="oracle-input-group">
+            <input 
+              type="text" 
+              id="oracle-question" 
+              class="oracle-input" 
+              placeholder="Ví dụ: Tối nay có nên ngủ sớm không?" 
+            />
+            <button class="oracle-ask-btn" id="oracle-btn">Phán!</button>
+          </div>
+          <div class="magic-ball" id="magic-ball" title="Bấm vào để lắc quả cầu!">
+            <div class="ball-inner" id="ball-center">8</div>
+          </div>
+          <div class="oracle-answer" id="oracle-text">Hỏi một câu bất kỳ rồi bấm Phán nha!</div>
+        </div>
+      </section>
+
+      <!-- Thẻ 5: Bong Bóng Pop-It Bóp Bong Bóng -->
+      <section class="toy-card">
+        <div class="card-header">
+          <span class="card-icon">🫧</span>
+          <div>
+            <div class="card-title">Bể Bong Bóng Pop-It</div>
+            <div class="card-desc">Bấm nổ bụp bụp xua tan âu lo</div>
+          </div>
+        </div>
+        <div class="pop-grid" id="bubble-grid">
+          <!-- 24 bubbles sinh ra bằng JS -->
+        </div>
+        <button class="action-btn" id="btn-reset-bubbles" style="margin-top: 10px;">🫧 Bơm Lại Tất Cả Bong Bóng</button>
+      </section>
+
+      <!-- Thẻ 6: Máy Bắn Meme & Triết Lý Cùn -->
+      <section class="toy-card">
+        <div class="card-header">
+          <span class="card-icon">🗿</span>
+          <div>
+            <div class="card-title">Góc Triết Lý Cùn & Meme</div>
+            <div class="card-desc">Những chân lý nghe xong thấy bất lực</div>
+          </div>
+        </div>
+        <div class="meme-box">
+          <div class="meme-display" id="meme-emoji">🗿</div>
+          <p class="meme-quote" id="meme-quote">"Nếu bạn không thể làm việc lớn... thì hãy đi ngủ!"</p>
+          <button class="action-btn" id="btn-next-meme" style="margin-top: 6px;">🎲 Đổi Triết Lý Khác</button>
+        </div>
+      </section>
+
+    </main>
+
+    <footer>
+      <p>Made with ❤️ & một đống sự vô tri | Bấm vào bất kỳ đâu trên màn hình để bắn pháo hoa ✨</p>
+    </footer>
+
+    <script src="script.js"></script>
   </body>
 </html>
